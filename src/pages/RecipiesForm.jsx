@@ -1,0 +1,65 @@
+import React from 'react'
+import { useState } from 'react';
+import { FaPlus } from 'react-icons/fa';
+import { IoMdClose } from "react-icons/io";
+import { useNavigate } from 'react-router';
+import { addRecipie } from '../mybackend';
+
+export const RecipiesForm = () => {
+  const [name, setName] = useState("")
+  const [ingredients, setIngredients] = useState([""])
+  const [steps, setSteps] = useState("")
+  const [category, setCategory] = useState("")
+  const [file, setFile] = useState(null)
+  const [preview, setPreview] = useState(null)
+  const [loading, setLoading] = useState(false)
+  
+
+  const navigate = useNavigate()
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(false)
+    let inputData = {name,ingredients,steps,category}
+    console.log(inputData);
+    await addRecipie(inputData,file)
+    console.log("mentve")
+  }
+
+  const handleChangeIngredients = (index, value) => {
+    const newIngredients = [...ingredients]
+    newIngredients[index] = value
+    setIngredients(newIngredients)
+  }
+  const handldeFileChange = (e)=>{
+    const selected = e.target.files[0]
+    setFile(selected)
+    if(selected){
+      setPreview(URL.createObjectURL(selected))
+    }
+  }
+
+
+  return (
+    <div style={{ minHeight: '100vh', backgroundColor: 'lightyellow', position: 'relative' }}>
+      <h1 style={{ textAlign: 'center' }}>Új recept feltöltése</h1>
+      <form onSubmit={handleSubmit}>
+        <input type="text" placeholder='receptneve' value={name} onChange={(e) => setName(e.target.value)} required />
+        <div>
+        {ingredients.map((item, index) => 
+          <div key={index}>
+            <input type="text" value={item} onChange={(e) => handleChangeIngredients(index, e.target.value) } placeholder={`${index+1} hozzávaló: `}/>
+          </div>
+        )}
+        <FaPlus onClick={()=>setIngredients([...ingredients,""])}/>
+        </div>
+        <textarea value={steps} onChange={(e)=>setSteps(e.target.value)} placeholder='Elkészítés lépései' required></textarea>
+        <input type="text" value={category} onChange={(e)=>setCategory(e.target.value)} placeholder='Kategoria' required/>
+        <input type="file" accept='image/*' onChange={handldeFileChange}/>
+        {preview && <img src={preview} alt='előnézet' style={{maxHeight:200,objectFit:"cover"}}/>}
+        <button type='submit'>Mentés</button>
+      </form>
+      {loading && <div>Loading...</div>}
+      <IoMdClose onClick={() => navigate("/recipies")} style={{ position: 'absolute', top: '5px', left: '5px' }} />
+    </div>
+  )
+}

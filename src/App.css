@@ -1,0 +1,10 @@
+.home {
+  background-image: url(assets/cover_small.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position:absolute;
+}
+*{
+  margin: 0;
+  box-sizing: border-box;
+}
