@@ -1,0 +1,17 @@
+.home {
+  background-color: #FAFAF8;
+  text-align: center;
+  padding: 40px;
+}
+
+.home-title {
+  font-size: 3rem;
+  color: #8DC63F;
+  margin-bottom: 10px;
+}
+
+.home-subtitle {
+  color: #555;
+  margin-bottom: 30px;
+  font-size: 1.2rem;
+}

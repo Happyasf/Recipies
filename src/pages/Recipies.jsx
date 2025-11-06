@@ -1,16 +1,36 @@
-import React from 'react'
-import { FaHome } from "react-icons/fa";
+import React, { useEffect, useState } from 'react';
+import { FaHome, FaPlus } from "react-icons/fa";
 import { useNavigate } from 'react-router';
+import { Recipiecard } from '../components/Recipiecard';
+import { readRecipies } from '../mybackend';
+import '../Recipies.css';
 
 export const Recipies = () => {
+  const [recipies, setRecipies] = useState([]);
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
+  useEffect(() => {
+    readRecipies(setRecipies);
+  }, []);
 
   return (
-    <div style={{minHeight:'100vh', backgroundColor:'lightyellow', position:'relative'}}>
-      <div style={{textAlign:'center'}}>Receptek...</div>
-      <FaHome onClick={()=>navigate("/")} style={{position:'absolute', top:'5px', left:'5px'}}/>
-      <button  onClick={()=>navigate("/addnew")} style={{position:'absolute', bottom:'5px', right:'5px'}}>Új recept hozzáadása</button>
+    <div className="recipies-page">
+      <header className="recipies-header">
+        <FaHome className="home-icon" onClick={() => navigate("/")} />
+        <h1>Receptek</h1>
+      </header>
+
+      <div className="recipies-grid">
+        {recipies.length > 0 ? (
+          recipies.map(obj => <Recipiecard key={obj.id} {...obj} />)
+        ) : (
+          <p>Nincsenek még receptek!</p>
+        )}
+      </div>
+
+      <button className="btn-primary add-btn" onClick={() => navigate("/addnew")}>
+        <FaPlus /> Új recept hozzáadása
+      </button>
     </div>
-  )
-}
+  );
+};

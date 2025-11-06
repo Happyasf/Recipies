@@ -13,6 +13,7 @@ function App() {
       <Route path='/' element={<Home/>}/>
       <Route path='/recipies' element={<Recipies/>}/>
       <Route path='/addnew' element={<RecipiesForm/>}/>
+      <Route path='/edit/:id' element={<RecipiesForm/>}/>
     </Routes>
   )
 }

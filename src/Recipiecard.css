@@ -1,0 +1,48 @@
+.recipie-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.recipie-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+.recipie-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.recipie-content {
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recipie-content h2 {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.recipie-actions .icon {
+  cursor: pointer;
+  margin-left: 10px;
+  transition: transform .2s ease;
+}
+
+.icon.edit {
+  color: #8DC63F;
+}
+
+.icon.delete {
+  color: #FF6F61;
+}
+
+.icon:hover {
+  transform: scale(1.2);
+}

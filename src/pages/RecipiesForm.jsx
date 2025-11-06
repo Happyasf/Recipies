@@ -2,8 +2,9 @@ import React from 'react'
 import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { IoMdClose } from "react-icons/io";
-import { useNavigate } from 'react-router';
-import { addRecipie } from '../mybackend';
+import { useNavigate, useParams } from 'react-router';
+import { addRecipie, readRecipie, readRecipies, updateRecipie } from '../mybackend';
+import { useEffect } from 'react';
 
 export const RecipiesForm = () => {
   const [name, setName] = useState("")
@@ -13,16 +14,47 @@ export const RecipiesForm = () => {
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(null)
   const [loading, setLoading] = useState(false)
-  
-
+  const [recipie,setRecipie] =useState(null)
   const navigate = useNavigate()
+ 
+  const {id} = useParams()
+
+  console.log(id);
+  
+  useEffect(()=>{
+    if(id){
+    readRecipie(id,setRecipie)}
+  },[id])
+
+ useEffect(()=>{
+  if(recipie){
+    setName(recipie.name)
+    setCategory(recipie.category)
+    setIngredients(recipie.ingredients)
+    setSteps(recipie.steps)
+    setPreview(recipie.imgUrl)
+  }
+ },[recipie])
+ 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setLoading(false)
+    setLoading(true)
     let inputData = {name,ingredients,steps,category}
     console.log(inputData);
-    await addRecipie(inputData,file)
-    console.log("mentve")
+    if(id){
+      console.log(recipie.imgUrl);
+      
+      await updateRecipie(id,!file ? {...inputData,imgUrl:recipie.imgUrl,deleteUrl:recipie.deleteUrl}: inputData,file)
+    }else{
+      await addRecipie(inputData, file)
+    }
+    setName('')
+    setCategory('')
+    setSteps('')
+    setIngredients([''])
+    setFile(null)
+    setLoading(false)
+    navigate('/recipies')
   }
 
   const handleChangeIngredients = (index, value) => {
