@@ -4,12 +4,16 @@ import './App.css'
 import { Home } from './pages/Home'
 import { Recipies } from './pages/Recipies'
 import { RecipiesForm } from './pages/RecipiesForm'
+import { SignIn } from './components/SignIn'
+import { SignUp } from './components/SignUp'
 
 function App() {
 
 
   return (
     <Routes>
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
       <Route path='/' element={<Home/>}/>
       <Route path='/recipies' element={<Recipies/>}/>
       <Route path='/addnew' element={<RecipiesForm/>}/>
