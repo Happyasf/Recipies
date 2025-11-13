@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { IoMdClose } from "react-icons/io";
 import { useNavigate, useParams } from 'react-router';
-import { addRecipie, readRecipie, readRecipies, updateRecipie } from '../mybackend';
+import { addRecipe, readRecipe, updateRecipe } from '../myBackend';
 import { useEffect } from 'react';
 
 export const RecipiesForm = () => {
@@ -23,7 +23,7 @@ export const RecipiesForm = () => {
   
   useEffect(()=>{
     if(id){
-    readRecipie(id,setRecipie)}
+    readRecipe(id,setRecipie)}
   },[id])
 
  useEffect(()=>{
@@ -44,9 +44,9 @@ export const RecipiesForm = () => {
     if(id){
       console.log(recipie.imgUrl);
       
-      await updateRecipie(id,!file ? {...inputData,imgUrl:recipie.imgUrl,deleteUrl:recipie.deleteUrl}: inputData,file)
+      await updateRecipe(id,!file ? {...inputData,imgUrl:recipie.imgUrl,deleteUrl:recipie.deleteUrl}: inputData,file)
     }else{
-      await addRecipie(inputData, file)
+      await addRecipe(inputData, file)
     }
     setName('')
     setCategory('')

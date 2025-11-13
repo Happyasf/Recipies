@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaHome, FaPlus } from "react-icons/fa";
 import { useNavigate } from 'react-router';
 import { Recipiecard } from '../components/Recipiecard';
-import { readRecipies } from '../mybackend';
+import { readRecipes } from '../myBackend';
 import '../Recipies.css';
 
 export const Recipies = () => {
@@ -10,7 +10,7 @@ export const Recipies = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    readRecipies(setRecipies);
+    readRecipes(setRecipies);
   }, []);
 
   return (

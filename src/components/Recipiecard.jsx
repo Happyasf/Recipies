@@ -1,9 +1,9 @@
 import React from 'react';
 import { MdDeleteForever } from "react-icons/md";
 import { FaPen } from 'react-icons/fa';
-import { deleteRecipie } from '../mybackend';
 import { useNavigate } from 'react-router';
 import '../Recipiecard.css';
+import {deleteRecipe} from '../myBackend'
 
 export const Recipiecard = ({ id, name, imgUrl, deleteUrl }) => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ export const Recipiecard = ({ id, name, imgUrl, deleteUrl }) => {
         <h2>{name}</h2>
         <div className="recipie-actions">
           <FaPen className="icon edit" onClick={() => navigate(`/edit/${id}`)} />
-          <MdDeleteForever className="icon delete" onClick={() => deleteRecipie(id, deleteUrl)} />
+          <MdDeleteForever className="icon delete" onClick={() => deleteRecipe(id, deleteUrl)} />
         </div>
       </div>
     </div>
