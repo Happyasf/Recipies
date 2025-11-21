@@ -1,17 +1,135 @@
-.home {
+.home-page {
   background-color: #FAFAF8;
-  text-align: center;
-  padding: 40px;
+  min-height: 100vh;
+  padding-bottom: 50px;
 }
 
-.home-title {
-  font-size: 3rem;
+
+
+.hero {
+  text-align: center;
+  padding: 60px 20px 20px;
+}
+
+.hero h1 {
   color: #8DC63F;
+  font-size: 3rem;
   margin-bottom: 10px;
 }
 
-.home-subtitle {
-  color: #555;
-  margin-bottom: 30px;
+.hero p {
   font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+
+.top-recipes {
+  margin-top: 40px;
+  padding: 0 8%;
+}
+
+.top-recipes h2 {
+  color: #8DC63F;
+  margin-bottom: 20px;
+}
+
+.home-recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+}
+
+.no-recipes {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
+
+/* BUTTON */
+.btn-primary {
+  padding: 10px 18px;
+  background-color: #8DC63F;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: .2s;
+}
+
+.btn-primary:hover {
+  background-color: #76b52b;
+}
+
+
+
+.header {
+  width: 100%;
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  background-color: #FAFAF8;
+  top: 0;
+  left: 0;
+  z-index: 50;
+}
+
+/* Home button */
+.home-icon-btn {
+  font-size: 2rem;
+  color: #8DC63F;
+  cursor: pointer;
+}
+
+
+.header-auth .gomb {
+  margin-left: 10px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background-color: white;
+  border: 2px solid #8DC63F;
+  color: #8DC63F;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.header-auth .gomb:hover {
+  background-color: #8DC63F;
+  color: white;
+}
+
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar-icon {
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 5px;
+  transition: .2s;
+}
+
+.avatar-icon:hover {
+  background-color: #FBB03B;
+  color: white;
+}
+
+.logout-btn {
+  background-color: #ff6f61;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.logout-btn:hover {
+  background-color: #e25347;
 }

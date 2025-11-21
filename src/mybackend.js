@@ -1,82 +1,157 @@
 import axios from "axios";
-import { addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp, Timestamp, updateDoc } from "firebase/firestore";
-import { db } from "./firebaseApp"
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc,
+  where,
+  getDocs
+} from "firebase/firestore";
+import { auth, db } from "./firebaseApp";
 import imageCompression from "browser-image-compression";
+import { deleteImageFromCloud } from "./CloudinaryUtils";
+
 const apiKey = import.meta.env.VITE_IMGBB_API_KEY;
-const imgbburl = `https://api.imgbb.com/1/upload?key=${apiKey}`
-console.log(imgbburl);
+const imgbburl = `https://api.imgbb.com/1/upload?key=${apiKey}`;
 
+// képfeltöltés imgBB-re
 const uploadToIMGBB = async (file) => {
-    const myFormData = new FormData()
-    myFormData.append("image", file)
-    try {
-        const resonse = await axios.post(imgbburl, myFormData)
-        const { url, delete_url } = resonse.data.data
-        return { url, delete_url }
-    } catch (error) {
-        console.log("Képfeltöltési hiba: " + error);
+  const myFormData = new FormData();
+  myFormData.append("image", file);
+  try {
+    const response = await axios.post(imgbburl, myFormData);
+    const { url, delete_url } = response.data.data;
+    return { url, delete_url };
+  } catch (e) {
+    console.log("❌ Képfeltöltési hiba: " + e);
+    return null;
+  }
+};
 
-    }
-}
-
+// ➕ recept hozzáadása
 export const addRecipe = async (recipe, file) => {
-
-    try {
-        let imgUrl = ""
-        let deleteUrl = ""
-        const compressed = await imageCompression(file, { maxSizeMB: 1, maxWidthOrHeight: 800, useWebWorker: true })
-        const result = await uploadToIMGBB(file)
-        if (result) {
-            imgUrl = result.url
-            deleteUrl = result.delete_url
-            console.log(result);
-
-            const collectionref = collection(db, "recipes")
-            await addDoc(collectionref, { ...recipe, imgUrl, deleteUrl, timestamp: serverTimestamp() })
-        }
-    } catch (error) {
-        console.log("Nem sikerült hozzáadni!" + error);
-
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      alert("❌ Csak bejelentkezve tölthetsz fel receptet!");
+      return;
     }
-}
-//receptek realtime olvasása: onsnapshot()
+    let imgUrl = "";
+    let deleteUrl = "";
+
+    if (file) {
+      const compressed = await imageCompression(file, {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 800,
+        useWebWorker: true
+      });
+      const result = await uploadToIMGBB(compressed);
+      if (result) {
+        imgUrl = result.url;
+        deleteUrl = result.delete_url;
+      }
+    }
+
+    const collectionRef = collection(db, "recipes");
+    await addDoc(collectionRef, {
+      ...recipe,
+      imgUrl,
+      deleteUrl,
+      userId: user.uid,
+      timestamp: serverTimestamp()
+    });
+  } catch (error) {
+    console.log("❌ Nem sikerült hozzáadni: " + error);
+  }
+};
+
+// 📌 összes recept valós időben
 export const readRecipes = async (setRecipes) => {
-    const collectionref = collection(db, "recipes")
-    const q = query(collectionref, orderBy("timestamp", "desc"))
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-        setRecipes(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
-    })
-    return unsubscribe
-}
-//recept törlése id alapján:
-export const deleteRecipe = async (id, deleteUrl) => {
-    //await axios.get(deleteUrl)
-    const docref = doc(db, "recipes", id)
-    await deleteDoc(docref)
-}
-export const readRecipe = async (id, setRecipe) => {
-    const docref = doc(db, 'recipes', id)
-    const docData = await getDoc(docref)
-    setRecipe(docData.data())
-}
-//update
-export const updateRecipe = async (id, updatedData, file) => {
-    let imgUrl = updatedData.imgUrl || ''
-    let deleteUrl = updatedData.deleteUrl || ''
-    try {
-        if (file) {
-            //az új file eltárolása
-            const compressed = await imageCompression(file, { maxSizeMB: 1, maxWidthOrHeight: 800, useWebWorker: true })
-            const result = await uploadToIMGBB(compressed)
-            if (result) {
-                imgUrl = result.url
-                deleteUrl = result.delete_url
-            }
-        }
-        const docref = doc(db, 'recipes', id)
-        await updateDoc(docref, { ...updatedData, imgUrl, deleteUrl, updatedAt: serverTimestamp() })
-    } catch (error) {
-        console.log("Hiba a módosításkor: " + error);
+  const collectionref = collection(db, "recipes");
+  const q = query(collectionref, orderBy("timestamp", "desc"));
+  const unsub = onSnapshot(q, (shot) => {
+    setRecipes(shot.docs.map((d) => ({ ...d.data(), id: d.id })));
+  });
+  return unsub;
+};
 
+// 🗑 recept törlése
+export const deleteRecipe = async (id, deleteUrl) => {
+  try {
+    if (deleteUrl) {
+      const public_id = deleteUrl.split("/").pop();
+      await deleteImageFromCloud(public_id);
     }
-}
+    await deleteDoc(doc(db, "recipes", id));
+  } catch (e) {
+    console.log("❌ Törlési hiba: " + e);
+  }
+};
+
+// 📌 egy recept lekérése
+export const readRecipe = async (id, setRecipe) => {
+  const ref = doc(db, "recipes", id);
+  const snap = await getDoc(ref);
+  setRecipe(snap.data());
+};
+
+// ✏ recept módosítása
+export const updateRecipe = async (id, updatedData, file) => {
+  let imgUrl = updatedData.imgUrl || "";
+  let deleteUrl = updatedData.deleteUrl || "";
+  try {
+    if (file) {
+      const compressed = await imageCompression(file, {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 800,
+        useWebWorker: true
+      });
+      const result = await uploadToIMGBB(compressed);
+      if (result) {
+        imgUrl = result.url;
+        deleteUrl = result.delete_url;
+      }
+    }
+    const ref = doc(db, "recipes", id);
+    await updateDoc(ref, { ...updatedData, imgUrl, deleteUrl, updatedAt: serverTimestamp() });
+  } catch (e) {
+    console.log("❌ Módosítási hiba: " + e);
+  }
+};
+
+// 📌 SAJÁT RECEPTEK
+export const readUserRecipes = async (setMyRecipes) => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const collectionRef = collection(db, "recipes");
+  const q = query(collectionRef, where("userId", "==", user.uid));
+  const snapshot = await getDocs(q);
+
+  setMyRecipes(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+};
+
+// 🧨 összes saját recept törlése (fiók törléskor)
+export const deleteAllRecipesOfUser = async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const collectionRef = collection(db, "recipes");
+  const q = query(collectionRef, where("userId", "==", user.uid));
+  const snapshot = await getDocs(q);
+
+  for (const d of snapshot.docs) {
+    const data = d.data();
+    if (data.deleteUrl) {
+      const public_id = data.deleteUrl.split("/").pop();
+      await deleteImageFromCloud(public_id);
+    }
+    await deleteDoc(doc(db, "recipes", d.id));
+  }
+};

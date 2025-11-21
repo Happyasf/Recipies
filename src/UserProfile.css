@@ -1,0 +1,138 @@
+.profile-container {
+  min-height: 100vh;
+  background-color: #FAFAF8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 80px;
+}
+
+.profile-card {
+  width: 430px;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.profile-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0px 3px 8px rgba(0,0,0,0.15);
+}
+
+.profile-data span {
+  color: #8DC63F;
+  font-weight: bold;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 15px;
+}
+
+.file-input-label {
+  padding: 10px 15px;
+  background-color: #8DC63F;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  width: fit-content;
+}
+
+.file-input-label input {
+  display: none;
+}
+
+.btn-primary {
+  padding: 12px 0;
+  background-color: #8DC63F;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background-color: #76b52b;
+}
+
+.delete-account-btn {
+  padding: 12px 0;
+  background-color: #ff5050;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.delete-account-btn:hover {
+  background-color: #d83a3a;
+}
+
+/* MODAL */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-card {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  width: 330px;
+  text-align: center;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin: 15px 0;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-cancel {
+  background: gray;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-delete {
+  background: #ff5050;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}

@@ -6,6 +6,7 @@ import { SignUp } from './components/SignUp'
 import { Recipies } from './pages/Recipies'
 import { RecipiesForm } from './pages/RecipiesForm'
 import { MyHeader } from './components/MyHeader'
+import { UserProfile } from './pages/UserProfile'
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       <Route path="/recipies" element={<Recipies/>} />
       <Route path="/addnew" element={<RecipiesForm/>} />
       <Route path="/edit/:id" element={<RecipiesForm/>} />
+      <Route path='/profile' element={<UserProfile/>}/>
     </Routes>
     </div>
   )
